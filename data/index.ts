@@ -108,31 +108,32 @@ export const testimonials = [
   {
     quote:
       "Collaborating with Savinu was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Savinu's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Savinu is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      name: "sihan edward",
+      title: "Director of shorel",
   },
 {
     quote:
       "Collaborating with Savinu was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Savinu's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Savinu is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      name: "sihan edward",
+      title: "Director of shorel",
   },
   {
     quote:
      "Collaborating with Savinu was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Savinu's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Savinu is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+     name: "sihan edward",
+     title: "Director of shorel",
   },
   {
     quote:
       "Collaborating with Savinu was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Savinu's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Savinu is the ideal partner.",
-    title: "Director of AlphaStream Technologies",
+      name: "sihan edward",
+      title: "Director of shorel",
   },
   {
     quote:
       "Collaborating with Savinu was an absolute pleasure. His professionalism, promptness, and dedication to delivering exceptional results were evident throughout our project. Savinu's enthusiasm for every facet of development truly stands out. If you're seeking to elevate your website and elevate your brand, Savinu is the ideal partner.",
-    name: "Michael Johnson",
-    title: "Director of AlphaStream Technologies",
+      name: "sihan edward",
+      title: "Director of shorel",
   },
 ];
 
