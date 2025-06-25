@@ -64,39 +64,61 @@ export const BentoGridItem = ({
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-
-  // ✅ FIX: Add proper error handling and browser check for clipboard
+// ✅ COMPLETELY SAFE handleCopy function
   const handleCopy = async () => {
     const text = "375savinuranasinghe@gmail.com";
     
+    // ✅ Check if we're on the client side first
+    if (typeof window === 'undefined') {
+      console.warn('Cannot copy text on server side');
+      return;
+    }
+    
     try {
-      // Check if navigator and clipboard API are available
-      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+      // Modern clipboard API (preferred)
+      if (navigator?.clipboard && typeof navigator.clipboard.writeText === 'function') {
         await navigator.clipboard.writeText(text);
         setCopied(true);
       } else {
-        // Fallback for older browsers or server-side rendering
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          setCopied(true);
-        } catch (err) {
-          console.error('Fallback: Oops, unable to copy', err);
+        // Legacy fallback with comprehensive checks
+        if (typeof document !== 'undefined' && document.createElement) {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-999999px";
+          textArea.style.top = "-999999px";
+          textArea.setAttribute('readonly', '');
+          textArea.style.opacity = '0';
+          
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          
+          try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+              setCopied(true);
+            } else {
+              console.warn('Copy command was unsuccessful');
+            }
+          } catch (err) {
+            console.error('Fallback copy failed:', err);
+          } finally {
+            document.body.removeChild(textArea);
+          }
+        } else {
+          console.warn('Copy functionality not available');
         }
-        document.body.removeChild(textArea);
       }
     } catch (err) {
-      console.error('Failed to copy: ', err);
+      console.error('Failed to copy:', err);
     }
     
     // Reset copied state after 3 seconds
-    setTimeout(() => setCopied(false), 3000);
+    if (typeof window !== 'undefined') {
+      setTimeout(() => setCopied(false), 3000);
+    }
   };
-
   return (
     <div
       className={cn(

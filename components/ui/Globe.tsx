@@ -119,7 +119,8 @@ export function Globe({ globeConfig, data }: WorldProps) {
     let points = [];
     for (let i = 0; i < arcs.length; i++) {
       const arc = arcs[i];
-      const rgb = hexToRgb(arc.color) as { r: number; g: number; b: number };
+      // ✅ FIX: Check if color exists and use fallback
+      const rgb = hexToRgb(arc.color) || { r: 255, g: 255, b: 255 };
       points.push({
         size: defaultProps.pointSize,
         order: arc.order,
@@ -193,7 +194,11 @@ export function Globe({ globeConfig, data }: WorldProps) {
 
     globeRef.current
       .ringsData([])
-      .ringColor((e: any) => (t: any) => `rgba(${hexToRgb(e.color)?.r}, ${hexToRgb(e.color)?.g}, ${hexToRgb(e.color)?.b}, ${1 - t})`)
+      .ringColor((e: any) => (t: any) => {
+        // ✅ FIX: Safe color conversion with fallback
+        const rgb = hexToRgb(e.color) || { r: 255, g: 255, b: 255 };
+        return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${1 - t})`;
+      })
       .ringMaxRadius(defaultProps.maxRings)
       .ringPropagationSpeed(RING_PROPAGATION_SPEED)
       .ringRepeatPeriod((defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings);
@@ -280,7 +285,14 @@ export function World(props: WorldProps) {
   );
 }
 
-export function hexToRgb(hex: string) {
+// ✅ FIXED: hexToRgb function with proper error handling
+export function hexToRgb(hex: string | undefined | null): { r: number; g: number; b: number } | null {
+  // Check if hex is valid
+  if (!hex || typeof hex !== 'string') {
+    console.warn('Invalid hex color provided to hexToRgb:', hex);
+    return null;
+  }
+
   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   hex = hex.replace(shorthandRegex, function (m, r, g, b) {
     return r + r + g + g + b + b;

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   motion,
   useAnimationFrame,
@@ -29,6 +29,32 @@ export function Button({
   className?: string;
   [key: string]: any;
 }) {
+  // ✅ Add mounting check for SSR safety
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // ✅ Show fallback during SSR
+  if (!isMounted) {
+    return (
+      <Component
+        className={cn(
+          "bg-slate-900/[0.8] border border-slate-800 backdrop-blur-xl text-white flex items-center justify-center w-full h-full text-sm antialiased relative",
+          className,
+          containerClassName
+        )}
+        style={{
+          borderRadius: borderRadius,
+        }}
+        {...otherProps}
+      >
+        {children}
+      </Component>
+    );
+  }
+
   return (
     <Component
       className={cn(

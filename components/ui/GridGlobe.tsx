@@ -1,43 +1,33 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-
-const World = dynamic(() => import("./Globe").then((m) => m.World), {
-  ssr: false,
-});
+import { useEffect, useState } from "react";
+import { World } from "./Globe";
 
 const GridGlobe = () => {
-  const globeConfig = {
-    pointSize: 4,
-    globeColor: "#062056",
-    showAtmosphere: true,
-    atmosphereColor: "#FFFFFF",
-    atmosphereAltitude: 0.1,
-    emissive: "#062056",
-    emissiveIntensity: 0.1,
-    shininess: 0.9,
-    polygonColor: "rgba(255,255,255,0.7)",
-    ambientLight: "#38bdf8",
-    directionalLeftLight: "#ffffff",
-    directionalTopLight: "#ffffff",
-    pointLight: "#ffffff",
-    arcTime: 1000,
-    arcLength: 0.9,
-    rings: 1,
-    maxRings: 3,
-    initialPosition: { lat: 22.3193, lng: 114.1694 },
-    autoRotate: true,
-    autoRotateSpeed: 0.5,
-  };
-  const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
+  const [isMounted, setIsMounted] = useState(false);
+
+  // ✅ Ensure this only renders on client-side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // ✅ Don't render until mounted to prevent hydration mismatch
+  if (!isMounted) {
+    return (
+      <div className="absolute right-0 top-0 h-full w-full flex items-center justify-center">
+        <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 animate-pulse opacity-50"></div>
+      </div>
+    );
+  }
+
+  const colors = ["#06b6d4", "#3b82f6", "#8b5cf6"];
+
   const sampleArcs = [
     {
       order: 1,
       startLat: -19.885592,
       startLng: -43.951191,
-      endLat: -22.9068,
-      endLng: -43.1729,
+      endLat: -15.595412,
+      endLng: -56.05918,
       arcAlt: 0.1,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
@@ -79,11 +69,11 @@ const GridGlobe = () => {
     },
     {
       order: 2,
-      startLat: -15.785493,
-      startLng: -47.909029,
-      endLat: 36.162809,
-      endLng: -115.119411,
-      arcAlt: 0.3,
+      startLat: -15.432563,
+      startLng: 28.315853,
+      endLat: 1.094136,
+      endLng: -63.34546,
+      arcAlt: 0.7,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
     {
@@ -136,7 +126,7 @@ const GridGlobe = () => {
       startLat: 51.5072,
       startLng: -0.1276,
       endLat: 48.8566,
-      endLng: -2.3522,
+      endLng: 2.3522,
       arcAlt: 0.1,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
@@ -163,7 +153,7 @@ const GridGlobe = () => {
       startLat: 34.0522,
       startLng: -118.2437,
       endLat: 48.8566,
-      endLng: -2.3522,
+      endLng: 2.3522,
       arcAlt: 0.2,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
@@ -206,7 +196,7 @@ const GridGlobe = () => {
     {
       order: 7,
       startLat: 48.8566,
-      startLng: -2.3522,
+      startLng: 2.3522,
       endLat: 52.52,
       endLng: 13.405,
       arcAlt: 0.1,
@@ -267,7 +257,7 @@ const GridGlobe = () => {
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
     {
-      order: 9,
+      order: 10,
       startLat: 1.3521,
       startLng: 103.8198,
       endLat: -34.6037,
@@ -294,84 +284,30 @@ const GridGlobe = () => {
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
     {
-      order: 10,
-      startLat: -6.2088,
-      startLng: 106.8456,
-      endLat: 52.3676,
-      endLng: 4.9041,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
       order: 11,
-      startLat: 41.9028,
-      startLng: 12.4964,
-      endLat: 34.0522,
-      endLng: -118.2437,
+      startLat: -22.9068,
+      startLng: -43.1729,
+      endLat: -37.8136,
+      endLng: 144.9631,
       arcAlt: 0.2,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
     {
       order: 11,
-      startLat: -6.2088,
-      startLng: 106.8456,
-      endLat: 31.2304,
-      endLng: 121.4737,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 11,
-      startLat: 22.3193,
-      startLng: 114.1694,
-      endLat: 1.3521,
-      endLng: 103.8198,
+      startLat: 28.6139,
+      startLng: 77.209,
+      endLat: -37.8136,
+      endLng: 144.9631,
       arcAlt: 0.2,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
     {
       order: 12,
-      startLat: 34.0522,
-      startLng: -118.2437,
-      endLat: 37.7749,
-      endLng: -122.4194,
+      startLat: -37.8136,
+      startLng: 144.9631,
+      endLat: -33.8688,
+      endLng: 151.2093,
       arcAlt: 0.1,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 12,
-      startLat: 35.6762,
-      startLng: 139.6503,
-      endLat: 22.3193,
-      endLng: 114.1694,
-      arcAlt: 0.2,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 12,
-      startLat: 22.3193,
-      startLng: 114.1694,
-      endLat: 34.0522,
-      endLng: -118.2437,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 13,
-      startLat: 52.52,
-      startLng: 13.405,
-      endLat: 22.3193,
-      endLng: 114.1694,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
-    {
-      order: 13,
-      startLat: 11.986597,
-      startLng: 8.571831,
-      endLat: 35.6762,
-      endLng: 139.6503,
-      arcAlt: 0.3,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
     {
@@ -383,53 +319,38 @@ const GridGlobe = () => {
       arcAlt: 0.1,
       color: colors[Math.floor(Math.random() * (colors.length - 1))],
     },
-    {
-      order: 14,
-      startLat: -33.936138,
-      startLng: 18.436529,
-      endLat: 21.395643,
-      endLng: 39.883798,
-      arcAlt: 0.3,
-      color: colors[Math.floor(Math.random() * (colors.length - 1))],
-    },
   ];
 
+  const globeConfig = {
+    pointSize: 4,
+    globeColor: "#062056",
+    showAtmosphere: true,
+    atmosphereColor: "#FFFFFF",
+    atmosphereAltitude: 0.1,
+    emissive: "#062056",
+    emissiveIntensity: 0.1,
+    shininess: 0.9,
+    polygonColor: "rgba(255,255,255,0.7)",
+    ambientLight: "#38bdf8",
+    directionalLeftLight: "#ffffff",
+    directionalTopLight: "#ffffff",
+    pointLight: "#ffffff",
+    arcTime: 1000,
+    arcLength: 0.9,
+    rings: 1,
+    maxRings: 3,
+    initialPosition: { lat: 22.3193, lng: 114.1694 },
+    autoRotate: true,
+    autoRotateSpeed: 0.5,
+  };
+
   return (
-    // remove dark:bg-black bg-white h-screen md:h-auto  w-full flex-row py-20
-    // change absolute -left-5 top-36, add w-full h-full md:top-40
-    <div className="flex items-center justify-center absolute -left-5 top-36 md:top-40 w-full h-full">
-      {/* remove h-full md:h-[40rem] */}
-      <div className="max-w-7xl mx-auto w-full relative overflow-hidden h-96 px-4">
-        {/* remove these text divs */}
-        {/* <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 1,
-          }}
-          className="div"
-        >
-          <h2 className="text-center text-xl md:text-4xl font-bold text-black dark:text-white">
-            We sell soap worldwide
-          </h2>
-          <p className="text-center text-base md:text-lg font-normal text-neutral-700 dark:text-neutral-200 max-w-md mt-2 mx-auto">
-            This globe is interactive and customizable. Have fun with it, and
-            don&apos;t forget to share it.
-          </p>
-        </motion.div> */}
-        <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40" />
-        {/* remove -bottom-20 */}
-        <div className="absolute w-full h-72 md:h-full z-10">
-          <World data={sampleArcs} globeConfig={globeConfig} />
-        </div>
+    <div className="flex items-center justify-center absolute inset-0 overflow-hidden">
+      <div className="w-full h-full max-w-sm">
+        <World data={sampleArcs} globeConfig={globeConfig} />
       </div>
     </div>
   );
 };
+
 export default GridGlobe;
