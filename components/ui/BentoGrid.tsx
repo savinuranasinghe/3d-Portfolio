@@ -51,7 +51,7 @@ export const BentoGridItem = ({
   titleClassName?: string;
   spareImg?: string;
 }) => {
-  const leftLists = [ "Mongodb", "Typescript"];
+  const leftLists = ["MongoDB", "TypeScript"];
   const rightLists = ["ReactJS", "NextJS"];
 
   const [copied, setCopied] = useState(false);
@@ -65,10 +65,36 @@ export const BentoGridItem = ({
     },
   };
 
-  const handleCopy = () => {
+  // ✅ FIX: Add proper error handling and browser check for clipboard
+  const handleCopy = async () => {
     const text = "375savinuranasinghe@gmail.com";
-    navigator.clipboard.writeText(text);
-    setCopied(true);
+    
+    try {
+      // Check if navigator and clipboard API are available
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+      } else {
+        // Fallback for older browsers or server-side rendering
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          setCopied(true);
+        } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+        }
+        document.body.removeChild(textArea);
+      }
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+    
+    // Reset copied state after 3 seconds
+    setTimeout(() => setCopied(false), 3000);
   };
 
   return (
@@ -100,7 +126,7 @@ export const BentoGridItem = ({
         <div
           className={`absolute right-0 -bottom-5 ${
             id === 5 && "w-full opacity-80"
-          }`}
+          } `}
         >
           {spareImg && (
             <img
@@ -112,7 +138,7 @@ export const BentoGridItem = ({
           )}
         </div>
         {id === 6 && (
-          // add background animation , remove the p tag
+          // add background type="gradient-bg"
           <BackgroundGradientAnimation>
             <div className="absolute z-50 inset-0 flex items-center justify-center text-white font-bold px-4 pointer-events-none text-3xl text-center md:text-4xl lg:text-7xl"></div>
           </BackgroundGradientAnimation>
@@ -124,7 +150,7 @@ export const BentoGridItem = ({
             "group-hover/bento:translate-x-2 transition duration-200 relative md:h-full min-h-40 flex flex-col px-5 p-5 lg:p-10"
           )}
         >
-          {/* change the order of the title and des, font-extralight, remove text-xs text-neutral-600 dark:text-neutral-300 , change the text-color */}
+          {/* change the order of the title and des, font-extralight, remove text-xs text-neutral-600 dark:text-neutral-300 , change the text color */}
           <div className="font-sans font-extralight md:max-w-32 md:text-xs lg:text-base text-sm text-[#C1C2D3] z-10">
             {description}
           </div>

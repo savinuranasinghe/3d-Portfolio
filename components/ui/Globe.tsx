@@ -5,6 +5,7 @@ import ThreeGlobe from "three-globe";
 import { useThree, Object3DNode, Canvas, extend } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import countries from "@/data/globe.json";
+
 declare module "@react-three/fiber" {
   interface ThreeElements {
     threeGlobe: Object3DNode<ThreeGlobe, typeof ThreeGlobe>;
@@ -139,9 +140,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
     const filteredPoints = points.filter(
       (v, i, a) =>
         a.findIndex((v2) =>
-          ["lat", "lng"].every(
-            (k) => v2[k as "lat" | "lng"] === v[k as "lat" | "lng"]
-          )
+          ["lat", "lng"].every((k) => v2[k as keyof typeof v2] === v[k as keyof typeof v])
         ) === i
     );
 
@@ -169,37 +168,35 @@ export function Globe({ globeConfig, data }: WorldProps) {
 
     globeRef.current
       .arcsData(data)
-      .arcStartLat((d) => (d as { startLat: number }).startLat * 1)
-      .arcStartLng((d) => (d as { startLng: number }).startLng * 1)
-      .arcEndLat((d) => (d as { endLat: number }).endLat * 1)
-      .arcEndLng((d) => (d as { endLng: number }).endLng * 1)
-      .arcColor((e: any) => (e as { color: string }).color)
+      .arcStartLat((d) => (d as Position).startLat * 1)
+      .arcStartLng((d) => (d as Position).startLng * 1)
+      .arcEndLat((d) => (d as Position).endLat * 1)
+      .arcEndLng((d) => (d as Position).endLng * 1)
+      .arcColor((e: any) => (e as Position).color)
       .arcAltitude((e) => {
-        return (e as { arcAlt: number }).arcAlt * 1;
+        return (e as Position).arcAlt * 1;
       })
       .arcStroke((e) => {
         return [0.32, 0.28, 0.3][Math.round(Math.random() * 2)];
       })
       .arcDashLength(defaultProps.arcLength)
-      .arcDashInitialGap((e) => (e as { order: number }).order * 1)
+      .arcDashInitialGap((e) => (e as Position).order * 1)
       .arcDashGap(15)
       .arcDashAnimateTime((e) => defaultProps.arcTime);
 
     globeRef.current
       .pointsData(data)
-      .pointColor((e) => (e as { color: string }).color)
+      .pointColor((e) => (e as Position).color)
       .pointsMerge(true)
       .pointAltitude(0.0)
       .pointRadius(2);
 
     globeRef.current
       .ringsData([])
-      .ringColor((e: any) => (t: any) => e.color(t))
+      .ringColor((e: any) => (t: any) => `rgba(${hexToRgb(e.color)?.r}, ${hexToRgb(e.color)?.g}, ${hexToRgb(e.color)?.b}, ${1 - t})`)
       .ringMaxRadius(defaultProps.maxRings)
       .ringPropagationSpeed(RING_PROPAGATION_SPEED)
-      .ringRepeatPeriod(
-        (defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings
-      );
+      .ringRepeatPeriod((defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings);
   };
 
   useEffect(() => {
@@ -230,14 +227,18 @@ export function Globe({ globeConfig, data }: WorldProps) {
   );
 }
 
+// ✅ FIXED: WebGLRendererConfig with proper window check
 export function WebGLRendererConfig() {
   const { gl, size } = useThree();
 
   useEffect(() => {
-    gl.setPixelRatio(window.devicePixelRatio);
+    // ✅ Check if window exists before accessing devicePixelRatio
+    const pixelRatio = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
+    
+    gl.setPixelRatio(pixelRatio);
     gl.setSize(size.width, size.height);
     gl.setClearColor(0xffaaff, 0);
-  }, []);
+  }, [gl, size]);
 
   return null;
 }
@@ -246,6 +247,7 @@ export function World(props: WorldProps) {
   const { globeConfig } = props;
   const scene = new Scene();
   scene.fog = new Fog(0xffffff, 400, 2000);
+  
   return (
     <Canvas scene={scene} camera={new PerspectiveCamera(50, aspect, 180, 1800)}>
       <WebGLRendererConfig />
