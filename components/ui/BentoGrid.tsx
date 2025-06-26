@@ -160,11 +160,13 @@ export const BentoGridItem = ({
           )}
         </div>
         {id === 6 && (
-          // add background type="gradient-bg"
-          <BackgroundGradientAnimation>
-            <div className="absolute z-50 inset-0 flex items-center justify-center text-white font-bold px-4 pointer-events-none text-3xl text-center md:text-4xl lg:text-7xl"></div>
-          </BackgroundGradientAnimation>
-        )}
+  // ✅ FIXED: Wrap in height-controlled container
+       <div className="absolute inset-0 h-full w-full max-h-[100%] overflow-hidden">
+        <BackgroundGradientAnimation>
+         <div className="absolute z-50 inset-0 flex items-center justify-center text-white font-bold px-4 pointer-events-none text-3xl text-center md:text-4xl lg:text-7xl"></div>
+         </BackgroundGradientAnimation>
+         </div>
+           )}
 
         <div
           className={cn(
